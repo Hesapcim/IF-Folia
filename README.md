@@ -8,16 +8,22 @@ This framework is based on a pane principle. This means that the GUI is divided 
 
 Next to those panes, GUIs can also be created from XML files by simple loading them in. This allows for easy GUI creation with little code.
 
-## Maven dependency
+## Maven dependency & repository
 To add this project as a dependency to your pom.xml, add the following to your pom.xml:
 ```XML
 <dependency>
     <groupId>com.github.stefvanschie.inventoryframework</groupId>
-    <artifactId>IF</artifactId>
+    <artifactId>IF-Folia</artifactId>
     <version>0.11.3</version>
 </dependency>
 ```
-The project is in the Central Repository, so specifying a repository is not needed.
+```
+<repository>
+  <id>cubixia-repository-snapshots</id>
+  <name>Cubixia Repository</name>
+  <url>https://repo.cubixia.net/snapshots</url>
+</repository>
+```
 
 Now in order to shade the project into your project, add the following to your pom.xml:
 ```XML
@@ -50,7 +56,7 @@ Replace [YOUR PACKAGE] with the top-level package of your project.
 To add this project as a dependency for your Gradle project, make sure your `dependencies` section of your build.gradle looks like the following:
 ```Groovy
 dependencies {
-    implementation 'com.github.stefvanschie.inventoryframework:IF:0.11.3'
+    implementation 'com.github.stefvanschie.inventoryframework:IF-Folia:0.11.3'
     // ...
 }
 ```
@@ -81,7 +87,10 @@ IF does **not** support declaring the dependency via the libraries section in th
 ## Building from source
 If you want to build this project from source, run the following:
 
+  Original Repository
     git clone https://github.com/stefvanschie/IF.git
+  Our Fork
+    git clone https://github.com/Hesapcim/IF-Folia.git
 
 This will clone this repository to your device. This project relies on NMS, for which the dependencies are not available online. Because of this, you'll need to follow additional steps to obtain all these dependencies locally.
 
