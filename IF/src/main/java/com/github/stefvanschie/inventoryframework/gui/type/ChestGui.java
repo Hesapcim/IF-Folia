@@ -136,7 +136,15 @@ public class ChestGui extends NamedGui implements MergedGui, InventoryBased {
             bottomComponent.placeItems(humanEntity.getInventory(), 0);
         }
 
-        humanEntity.openInventory(getInventory());
+        // Use Folia-compatible scheduling for inventory opening
+        if (humanEntity instanceof org.bukkit.entity.Player) {
+            org.bukkit.entity.Player player = (org.bukkit.entity.Player) humanEntity;
+            getFoliaScheduler().runAtEntity(player, () -> {
+                player.openInventory(getInventory());
+            });
+        } else {
+            humanEntity.openInventory(getInventory());
+        }
     }
 
     @NotNull

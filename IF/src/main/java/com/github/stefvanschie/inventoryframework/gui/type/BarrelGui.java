@@ -118,7 +118,10 @@ public class BarrelGui extends NamedGui implements MergedGui, InventoryBased {
             bottomComponent.placeItems(humanEntity.getInventory(), 0);
         }
 
-        humanEntity.openInventory(getInventory());
+        // Use Folia-compatible scheduling for inventory opening
+        getFoliaScheduler().runAtEntity(humanEntity, () -> {
+            humanEntity.openInventory(getInventory());
+        });
     }
 
     @NotNull

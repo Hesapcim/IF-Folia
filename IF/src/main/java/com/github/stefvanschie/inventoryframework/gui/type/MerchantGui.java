@@ -190,11 +190,15 @@ public class MerchantGui extends NamedGui implements InventoryBased {
             getPlayerInventoryComponent().placeItems(humanEntity.getInventory(), 0);
         }
 
-        humanEntity.openInventory(getInventory());
-
-        if (this.experience >= 0 || this.level > 0 || !this.trades.isEmpty()) {
-            this.merchantInventory.sendMerchantOffers((Player) humanEntity, this.trades, this.level, this.experience);
-        }
+        // Use Folia-compatible scheduling for inventory opening
+        Player player = (Player) humanEntity;
+        getFoliaScheduler().runAtEntity(player, () -> {
+            player.openInventory(getInventory());
+            
+            if (this.experience >= 0 || this.level > 0 || !this.trades.isEmpty()) {
+                this.merchantInventory.sendMerchantOffers(player, this.trades, this.level, this.experience);
+            }
+        });
     }
 
     @NotNull

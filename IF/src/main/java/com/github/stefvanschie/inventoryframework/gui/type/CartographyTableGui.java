@@ -143,7 +143,11 @@ public class CartographyTableGui extends NamedGui implements InventoryBased {
         }
 
         //also let Bukkit know that we opened an inventory
-        humanEntity.openInventory(getInventory());
+        // Use Folia-compatible scheduling for inventory opening
+        Player player = (Player) humanEntity;
+        getFoliaScheduler().runAtEntity(player, () -> {
+            player.openInventory(getInventory());
+        });
     }
 
     @NotNull

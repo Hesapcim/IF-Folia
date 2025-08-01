@@ -113,7 +113,10 @@ public class CrafterGui extends NamedGui implements InventoryBased {
             getPlayerInventoryComponent().placeItems(humanEntity.getInventory(), 0);
         }
 
-        humanEntity.openInventory(getInventory());
+        // Use Folia-compatible scheduling for inventory opening
+        getFoliaScheduler().runAtEntity(humanEntity, () -> {
+            humanEntity.openInventory(getInventory());
+        });
     }
 
     @NotNull

@@ -28,6 +28,10 @@
             <id>mojang-repo</id>
             <url>https://libraries.minecraft.net/</url>
         </repository>
+        <repository>
+            <id>tcoded-releases</id>
+            <url>https://repo.tcoded.com/releases</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -243,38 +247,20 @@
             <version>5.11.4</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.tcoded</groupId>
+            <artifactId>FoliaLib</artifactId>
+            <version>0.5.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>central</id>
-            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
-        </snapshotRepository>
+        <repository>
+            <id>cubixia-repository-snapshots</id>
+            <url>http://repo.cubixia.net/snapshots</url>
+        </repository>
     </distributionManagement>
-
-    <profiles>
-        <profile>
-            <id>deploy</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.2.7</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
     <build>
         <finalName>${project.parent.name}-${project.version}</finalName>
@@ -304,16 +290,13 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.central</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.8.0</version>
-                <extensions>true</extensions>
                 <configuration>
-                    <publishingServerId>central</publishingServerId>
-                    <autoPublish>true</autoPublish>
-                    <waitUntil>published</waitUntil>
+                    <relocations>
+                        <relocation>
+                            <pattern>com.tcoded.folialib</pattern>
+                            <shadedPattern>com.github.stefvanschie.inventoryframework.lib.folialib</shadedPattern>
+                        </relocation>
+                    </relocations>
                 </configuration>
             </plugin>
             <plugin>
@@ -342,6 +325,45 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-deploy-files</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- Create maven-artifacts directory -->
+                                <mkdir dir="${project.basedir}/../maven-artifacts"/>
+                                
+                                <!-- Create maven-deploy-files directory -->
+                                <mkdir dir="${project.basedir}/../maven-deploy-files"/>
+                                
+                                <!-- Copy main JAR to maven-artifacts -->
+                                <copy file="${project.build.directory}/IF-${project.version}.jar" 
+                                      tofile="${project.basedir}/../maven-artifacts/IF-Folia-${project.version}.jar" 
+                                      failonerror="false"/>
+                                
+                                <!-- Copy sources JAR to maven-artifacts -->
+                                <copy file="${project.build.directory}/IF-${project.version}-sources.jar" 
+                                      tofile="${project.basedir}/../maven-artifacts/IF-Folia-${project.version}-sources.jar" 
+                                      failonerror="false"/>
+                                
+                                <!-- Copy javadoc JAR to maven-artifacts -->
+                                <copy file="${project.build.directory}/IF-${project.version}-javadoc.jar" 
+                                      tofile="${project.basedir}/../maven-artifacts/IF-Folia-${project.version}-javadoc.jar" 
+                                      failonerror="false"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
 </project>

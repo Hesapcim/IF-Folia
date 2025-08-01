@@ -6,6 +6,7 @@ import com.github.stefvanschie.inventoryframework.gui.GuiListener;
 import com.github.stefvanschie.inventoryframework.gui.type.*;
 import com.github.stefvanschie.inventoryframework.pane.*;
 import com.github.stefvanschie.inventoryframework.pane.component.*;
+import com.github.stefvanschie.inventoryframework.util.FoliaScheduler;
 import com.github.stefvanschie.inventoryframework.util.TriFunction;
 import com.github.stefvanschie.inventoryframework.util.XMLUtil;
 import org.bukkit.Bukkit;
@@ -47,6 +48,12 @@ public abstract class Gui {
      */
     @NotNull
     protected final Plugin plugin;
+
+    /**
+     * The Folia-compatible scheduler for this gui
+     */
+    @NotNull
+    protected final FoliaScheduler foliaScheduler;
 
     /**
      * The inventory of this gui
@@ -155,6 +162,7 @@ public abstract class Gui {
      */
     public Gui(@NotNull Plugin plugin) {
         this.plugin = plugin;
+        this.foliaScheduler = new FoliaScheduler(plugin);
 
         if (!hasRegisteredListeners) {
             Bukkit.getPluginManager().registerEvents(new GuiListener(plugin), plugin);
@@ -280,6 +288,18 @@ public abstract class Gui {
     @Contract(pure = true)
     public HumanEntityCache getHumanEntityCache() {
         return humanEntityCache;
+    }
+
+    /**
+     * Gets the Folia-compatible scheduler for this gui
+     *
+     * @return the FoliaScheduler instance
+     * @since 0.11.3
+     */
+    @NotNull
+    @Contract(pure = true)
+    public FoliaScheduler getFoliaScheduler() {
+        return foliaScheduler;
     }
 
     /**

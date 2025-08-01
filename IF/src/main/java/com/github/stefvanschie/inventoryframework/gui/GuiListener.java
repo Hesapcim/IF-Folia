@@ -83,6 +83,7 @@ public class GuiListener implements Listener {
         gui.click(event);
 
         if (event.isCancelled()) {
+
             Bukkit.getScheduler().runTask(this.plugin, () -> {
                 PlayerInventory playerInventory = event.getWhoClicked().getInventory();
 

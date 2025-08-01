@@ -127,7 +127,11 @@ public class EnchantingTableGui extends NamedGui implements InventoryBased {
             getPlayerInventoryComponent().placeItems(humanEntity.getInventory(), 0);
         }
 
-        humanEntity.openInventory(getInventory());
+        // Use Folia-compatible scheduling for inventory opening
+        Player player = (Player) humanEntity;
+        getFoliaScheduler().runAtEntity(player, () -> {
+            player.openInventory(getInventory());
+        });
     }
 
     @NotNull
