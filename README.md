@@ -17,7 +17,7 @@ To add this project as a dependency to your pom.xml, add the following to your p
     <version>0.11.3</version>
 </dependency>
 ```
-```
+```XML
 <repository>
   <id>cubixia-repository-snapshots</id>
   <name>Cubixia Repository</name>
