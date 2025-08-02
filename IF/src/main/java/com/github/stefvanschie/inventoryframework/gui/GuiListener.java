@@ -3,7 +3,7 @@ package com.github.stefvanschie.inventoryframework.gui;
 import com.github.stefvanschie.inventoryframework.gui.type.*;
 import com.github.stefvanschie.inventoryframework.gui.type.util.Gui;
 import com.github.stefvanschie.inventoryframework.util.InventoryViewUtil;
-import org.bukkit.Bukkit;
+import com.github.stefvanschie.inventoryframework.util.FoliaScheduler;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.plugin.Plugin;
+import org.checkerframework.checker.units.qual.s;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,6 +37,12 @@ public class GuiListener implements Listener {
     private final Plugin plugin;
 
     /**
+     * The FoliaScheduler instance for cross-platform scheduling.
+     */
+    @NotNull
+    private final FoliaScheduler scheduler;
+
+    /**
      * A collection of all {@link Gui} instances that have at least one viewer.
      */
     @NotNull
@@ -49,6 +56,7 @@ public class GuiListener implements Listener {
      */
     public GuiListener(@NotNull Plugin plugin) {
         this.plugin = plugin;
+        this.scheduler = new FoliaScheduler(plugin);
     }
 
     /**
@@ -84,7 +92,7 @@ public class GuiListener implements Listener {
 
         if (event.isCancelled()) {
 
-            Bukkit.getScheduler().runTask(this.plugin, () -> {
+            scheduler.runNextTick(() -> {
                 PlayerInventory playerInventory = event.getWhoClicked().getInventory();
 
                 /* due to a client issue off-hand items appear as ghost items, this updates the off-hand correctly
@@ -237,14 +245,16 @@ public class GuiListener implements Listener {
         if (!gui.isUpdating()) {
             gui.callOnClose(event);
 
-            gui.getHumanEntityCache().restoreAndForget(humanEntity);
+            scheduler.runAtEntity(humanEntity, () -> {
+                gui.getHumanEntityCache().restoreAndForget(humanEntity);
+            });
 
             if (gui.getViewerCount() == 1) {
                 activeGuiInstances.remove(gui);
             }
 
             //Bukkit doesn't like it if you open an inventory while the previous one is being closed
-            Bukkit.getScheduler().runTask(this.plugin, () -> gui.navigateToParent(humanEntity));
+            scheduler.runNextTick(() -> gui.navigateToParent(humanEntity));
         }
     }
 
