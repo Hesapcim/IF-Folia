@@ -14,7 +14,7 @@ To add this project as a dependency to your pom.xml, add the following to your p
 <dependency>
     <groupId>com.github.stefvanschie.inventoryframework</groupId>
     <artifactId>IF-Folia</artifactId>
-    <version>0.11.3</version>
+    <version>0.11.3-test</version>
 </dependency>
 ```
 ```XML
@@ -56,7 +56,7 @@ Replace [YOUR PACKAGE] with the top-level package of your project.
 To add this project as a dependency for your Gradle project, make sure your `dependencies` section of your build.gradle looks like the following:
 ```Groovy
 dependencies {
-    implementation 'com.github.stefvanschie.inventoryframework:IF-Folia:0.11.3'
+    implementation 'com.github.stefvanschie.inventoryframework:IF-Folia:0.11.3-test'
     // ...
 }
 ```
